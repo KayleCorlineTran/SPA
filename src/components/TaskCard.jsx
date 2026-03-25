@@ -1,7 +1,7 @@
-import { IoTrashOutline, IoTimeOutline, IoAlertCircleOutline } from "react-icons/io5";
+import { IoTrashOutline, IoTimeOutline, IoAlertCircleOutline, IoPencilSharp  } from "react-icons/io5";
 import { useTasks } from "../hook/useTasks";
 
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, onEdit }) {
   const { deleteTask, updateTaskStatus } = useTasks();
   
   if (!task.deadline) return null; // Hoặc xử lý nếu không có deadline
@@ -26,11 +26,19 @@ export default function TaskCard({ task }) {
       : isUpcoming 
         ? 'border-amber-500 bg-amber-50 animate-pulse' 
         : 'border-blue-400' // Trạng thái mặc định khi chưa xong và chưa đến hạn
-}`}>
+}`}> 
+<div className="flex justify-between items-start gap-2">
       <h3 className={`font-bold text-sm ${task.status === 'DONE' ? 'line-through opacity-50 text-gray-400' : 'text-gray-800'}`}>
         {task.title}
       </h3>
-      
+      {/* Nút Sửa */}
+  <button 
+    onClick={() => onEdit(task)} // Gọi hàm mở modal từ App truyền xuống
+    className="text-gray-400 hover:text-blue-500 p-1"
+  >
+    <IoPencilSharp size={16} />
+  </button>
+  </div>
       <div className="mt-2 space-y-1">
         <p className={`text-[10px] flex items-center gap-1 font-medium ${
           isOverdue ? 'text-red-600' : 

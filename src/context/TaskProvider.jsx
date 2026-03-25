@@ -39,7 +39,12 @@ const filteredTasks = tasks.filter(task => {
     };
     setTasks([...tasks, newTask]);
   };
-
+// Thêm vào trong TaskProvider
+const updateTask = (id, updatedData) => {
+  setTasks(tasks.map(t => 
+    t.id === id ? { ...t, ...updatedData } : t
+  ));
+};
   // Hàm xóa task
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
@@ -69,6 +74,7 @@ const filteredTasks = tasks.filter(task => {
     filterStatus, 
     setFilterStatus, // Trả về hàm này để Header sử dụng
     addTask, 
+    updateTask,
     deleteTask, 
     updateTaskStatus, 
     stats 
