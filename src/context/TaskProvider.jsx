@@ -1,42 +1,78 @@
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { TaskContext } from "./TaskContext";
-// Tạo Provider để bao bọc ứng dụng
 export const TaskProvider = ({ children }) => {
-  // Khởi tạo danh sách task trống 
-  const [tasks, setTasks] = useState([]);
-const stats = {
-  total: tasks.length,
-  todo: tasks.filter(t => t.status === 'TODO').length,
-  doing: tasks.filter(t => t.status === 'IN_PROGRESS').length,
-  done: tasks.filter(t => t.status === 'DONE').length,
-  late: tasks.filter(t => t.deadline && new Date(t.deadline) < new Date() && t.status !== 'DONE').length
-};
-  // Hàm thêm công việc mới
+  const [tasks, setTasks] = useState(() => {
+    // Kiểm tra xem trong kho đã có dữ liệu chưa
+    const saved = localStorage.getItem('my_kanban_tasks');
+    
+    // Nếu có, biến chuỗi thành mảng. Nếu không, trả về mảng rỗng []
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (error) {
+        console.error("Lỗi đọc dữ liệu từ LocalStorage:", error);
+        return [];
+      }
+    }
+    return [];
+  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('ALL'); // 'ALL', 'TODO', 'IN_PROGRESS', 'DONE'
+const filteredTasks = tasks.filter(task => {
+  const matchSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+  const matchStatus = filterStatus === 'ALL' || task.status === filterStatus;
+  return matchSearch && matchStatus;
+});
+  // Lưu dữ liệu mỗi khi tasks có sự thay đổi
+  useEffect(() => {
+    localStorage.setItem('my_kanban_tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  // Hàm thêm task
   const addTask = (title, deadline) => {
     const newTask = {
-      id: Date.now(), // Tạo ID duy nhất bằng timestamp
+      id: Date.now(), // Dùng timestamp làm ID duy nhất
       title,
       deadline,
-      status: 'TODO'
+      status: 'TODO',
+      createdAt: new Date().toISOString()
     };
     setTasks([...tasks, newTask]);
   };
 
- // Hàm xóa task
+  // Hàm xóa task
   const deleteTask = (id) => {
-    setTasks(prev => prev.filter(task => task.id !== id));
+    setTasks(tasks.filter(task => task.id !== id));
   };
 
-  // Hàm cập nhật trạng thái (Chuyển cột)
+  // Hàm cập nhật trạng thái (TODO -> IN_PROGRESS -> DONE)
   const updateTaskStatus = (id, newStatus) => {
-    setTasks(prev => prev.map(task => 
+    setTasks(tasks.map(task => 
       task.id === id ? { ...task, status: newStatus } : task
     ));
   };
-  return (
-    <TaskContext.Provider value={{ tasks, addTask, deleteTask, updateTaskStatus, stats }}>
-      {children}
-    </TaskContext.Provider>
-  );
-};
 
+  // Thống kê (Stats)
+  const stats = {
+    total: tasks.length,
+    done: tasks.filter(t => t.status === 'DONE').length,
+    todo: tasks.filter(t => t.status === 'TODO').length,
+    doing: tasks.filter(t => t.status === 'IN_PROGRESS').length,
+    late: tasks.filter(t => t.deadline && new Date(t.deadline) < new Date() && t.status !== 'DONE').length
+  };
+
+  return (
+    <TaskContext.Provider value={{ 
+    tasks: filteredTasks, 
+    searchQuery, 
+    setSearchQuery, 
+    filterStatus, 
+    setFilterStatus, // Trả về hàm này để Header sử dụng
+    addTask, 
+    deleteTask, 
+    updateTaskStatus, 
+    stats 
+  }}>
+    {children}
+  </TaskContext.Provider>
+)};
