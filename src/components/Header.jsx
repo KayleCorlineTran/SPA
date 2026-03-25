@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTasks } from '../hook/useTasks';
-
+import { StatCard } from './Stat/StatCard';
 export default function Header() {
     const { stats } = useTasks();
 

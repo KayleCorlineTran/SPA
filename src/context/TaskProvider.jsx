@@ -3,9 +3,7 @@ import { TaskContext } from "./TaskContext";
 // Tạo Provider để bao bọc ứng dụng
 export const TaskProvider = ({ children }) => {
   // Khởi tạo danh sách task trống 
-  const [tasks, setTasks] = useState([
-   ''
-  ]);
+  const [tasks, setTasks] = useState([]);
 const stats = {
   total: tasks.length,
   todo: tasks.filter(t => t.status === 'TODO').length,
