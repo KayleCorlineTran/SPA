@@ -1,16 +1,37 @@
-# React + Vite
+# React Kanban Task Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ứng dụng quản lý công việc cá nhân theo phong cách Kanban, được xây dựng để thực hành React Context API và Tailwind CSS.
 
-Currently, two official plugins are available:
+## Tính năng chính
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Quản lý Task:** Thêm, xóa, và chuyển đổi trạng thái (Todo -> Doing -> Done).
+- **Cảnh báo thông minh:** Tự động đổi màu và hiệu ứng nhấp nháy cho task sắp hết hạn (trước 1 tiếng) và đã quá hạn.
+- **Tìm kiếm:** Lọc công việc theo tiêu đề thời gian thực.
+- **Lưu trữ:** Dữ liệu được bảo toàn qua LocalStorage (không mất khi F5).
+- **Responsive:** Hiển thị tốt trên cả máy tính và điện thoại.
 
-## React Compiler
+## Công nghệ sử dụng
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend:** React JS (Vite)
+- **Styling:** Tailwind CSS
+- **Icons:** React Icons
+- **State Management:** Context API
 
-## Expanding the ESLint configuration
+## Cài đặt và Chạy thử
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone dự án: `git clone [https://github.com/KayleCorlineTran/SPA.git]`
+2. Cài đặt thư viện: `npm install`
+3. Chạy môi trường dev: `npm run dev`
+
+## Cấu trúc thư mục
+
+- `src/context`: Quản lý dữ liệu toàn cục.
+- `src/components`: Các thành phần giao diện tái sử dụng.
+- `src/hook`: Custom hook `useTasks` để truy cập dữ liệu nhanh.
+
+## Sẽ bổ sung
+
+- Bắt lỗi thời gian
+- Thêm pop up cảnh báo
+- Kéo trực tiếp các task qua các trạng thái mà không cần nhấn từng trạng thái
+- Thiết kế lại giao diện đẹp hơn
