@@ -2,7 +2,7 @@
 import { IoTrashOutline, IoAdd } from "react-icons/io5";
 import { useTasks } from "../hook/useTasks";
 import TaskCard from "./TaskCard";
-export default function TaskList({ status, title, icon, colorClass, onAddClick }) {
+export default function TaskList({ status, title, icon, colorClass, onAddClick, onEdit }) {
   const { tasks } = useTasks();
   
   const filteredTasks = tasks.filter(t => t.status === status);
@@ -17,7 +17,7 @@ export default function TaskList({ status, title, icon, colorClass, onAddClick }
       <div className="space-y-3">
        
   {filteredTasks.map(task => (
-    <TaskCard key={task.id} task={task} />
+    <TaskCard key={task.id} task={task} onEdit={onEdit}/>
   ))}
 
       </div>

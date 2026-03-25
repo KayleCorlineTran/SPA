@@ -15,6 +15,17 @@ const { stats, searchQuery, setSearchQuery, filterStatus, setFilterStatus } = us
     { id: 'IN_PROGRESS', label: 'Doing', count: stats.doing },
     { id: 'DONE', label: 'Done', count: stats.done },
   ];
+  const [taskToEdit, setTaskToEdit] = useState(null); // State edit
+
+  const handleOpenEdit = (task) => {
+    setTaskToEdit(task);
+    setShowModal(true);
+  };
+
+  const handleOpenCreate = () => {
+    setTaskToEdit(null); // Reset về null để Modal biết là đang tạo mới
+    setShowModal(true);
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-6 font-sans">
       <div className="max-w-6xl mx-auto">
@@ -47,12 +58,17 @@ const { stats, searchQuery, setSearchQuery, filterStatus, setFilterStatus } = us
       </div>
       </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <TaskList title="TODO" status="TODO" icon={<IoPencilSharp />} colorClass="bg-amber-100/50 border-amber-200 text-amber-600" onAddClick={() => setShowModal(true)} />
+          <TaskList title="TODO" status="TODO" icon={<IoPencilSharp />} colorClass="bg-amber-100/50 border-amber-200 text-amber-600" onAddClick={handleOpenCreate} onEdit={handleOpenEdit} />
           <TaskList title="In Progress" status="IN_PROGRESS" icon={<IoTimer />} colorClass="bg-blue-100/50 border-blue-100 text-blue-500" />
           <TaskList title="DONE" status="DONE" icon={<IoCheckboxSharp />} colorClass="bg-green-100/50 border-green-100 text-green-500" />
         </div>
-
-        {showModal && <TaskForm setShowModal={setShowModal} />}
+{showModal && (
+      <TaskForm 
+      key={taskToEdit ? taskToEdit.id : 'new'}
+        setShowModal={setShowModal} 
+        taskToEdit={taskToEdit} 
+      />
+    )}
       </div>
     </div>
   );
