@@ -4,10 +4,15 @@ import { TaskContext } from "./TaskContext";
 export const TaskProvider = ({ children }) => {
   // Khởi tạo danh sách task trống 
   const [tasks, setTasks] = useState([
-    { id: 1, title: "Học React Context", deadline: "2026-03-26T10:00", status: "TODO" },
-    { id: 2, title: "Làm UI Kanban", deadline: "2026-03-25T15:00", status: "IN_PROGRESS" }
+   ''
   ]);
-
+const stats = {
+  total: tasks.length,
+  todo: tasks.filter(t => t.status === 'TODO').length,
+  doing: tasks.filter(t => t.status === 'IN_PROGRESS').length,
+  done: tasks.filter(t => t.status === 'DONE').length,
+  late: tasks.filter(t => t.deadline && new Date(t.deadline) < new Date() && t.status !== 'DONE').length
+};
   // Hàm thêm công việc mới
   const addTask = (title, deadline) => {
     const newTask = {
@@ -31,7 +36,7 @@ export const TaskProvider = ({ children }) => {
     ));
   };
   return (
-    <TaskContext.Provider value={{ tasks, addTask, deleteTask, updateTaskStatus }}>
+    <TaskContext.Provider value={{ tasks, addTask, deleteTask, updateTaskStatus, stats }}>
       {children}
     </TaskContext.Provider>
   );
