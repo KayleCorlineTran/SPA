@@ -6,7 +6,8 @@ import {
   IoPencilSharp, 
   IoCloseSharp, 
   IoCheckmarkDoneSharp, 
-  IoTrashOutline 
+  IoTrashOutline,
+  IoArrowForward
 } from "react-icons/io5";
 import { useTasks } from "./hook/useTasks"; 
 
@@ -15,10 +16,10 @@ export default function App() {
   const [title, setTitle] = useState('');
   const [deadline, setDeadline] = useState('');
 
-  // 1. Lấy dữ liệu và hàm từ Context
-  const { tasks, addTask} = useTasks();
+  // Lấy dữ liệu và hàm từ Context
+  const { tasks, addTask, deleteTask, updateTaskStatus } = useTasks();
 
-  // 2. Logic tính toán thống kê
+  // Logic tính toán thống kê
   const totalTasks = tasks.length;
   const doneTasks = tasks.filter(t => t.status === 'DONE').length;
   
@@ -29,7 +30,7 @@ export default function App() {
     t.status !== 'DONE'
   ).length;
 
-  // 3. Hàm xử lý nghiệp vụ
+  // Tạo task mới
   const handleCreate = () => {
     if (!title.trim()) return alert("Vui lòng nhập tiêu đề!");
     addTask(title, deadline);
@@ -84,10 +85,22 @@ export default function App() {
                     <p className="text-[10px] text-red-600 font-bold italic">Quá hạn!</p>
                   )}
 
-                 
+                  <div className="flex justify-end gap-3 mt-3">
+                    <button onClick={() => updateTaskStatus(task.id, 'IN_PROGRESS')} className="text-blue-500 text-xs font-bold hover:underline">Làm ngay</button>
+                    <button onClick={() => deleteTask(task.id)} className="text-gray-300 hover:text-red-500 transition-colors"><IoTrashOutline size={16}/></button>
+                  </div>
                 </div>
               ))}
             </div>
+             {/* --- NÚT ADD ITEM --- */}
+        <div className="flex ">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold transition-all p-3 rounded-xl hover:bg-blue-50"
+          >
+            <IoAdd className="text-2xl" /> Add an item
+          </button>
+        </div>
           </div>
 
           {/* CỘT IN PROGRESS */}
@@ -99,7 +112,11 @@ export default function App() {
               {getTasksByStatus('IN_PROGRESS').map(task => (
                 <div key={task.id} className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-400">
                   <h3 className="font-bold text-sm">{task.title}</h3>
-                  
+                  <div className="flex justify-end mt-3">
+                    <button onClick={() => updateTaskStatus(task.id, 'DONE')} className="text-green-600 text-xs font-bold flex items-center gap-1 hover:underline">
+                      Làm Xong <IoArrowForward />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -114,22 +131,17 @@ export default function App() {
               {getTasksByStatus('DONE').map(task => (
                 <div key={task.id} className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 opacity-60">
                   <h3 className="font-bold text-sm line-through">{task.title}</h3>
-                  
+                  <div className="flex justify-between items-center mt-2">
+                    <p className="flex items-center gap-1 text-[9px] text-green-600 font-bold italic">Hoàn thành <IoCheckmarkDoneSharp /></p>
+                    <button onClick={() => deleteTask(task.id)} className="text-gray-400 hover:text-red-500"><IoTrashOutline /></button>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* --- NÚT ADD ITEM --- */}
-        <div className="flex justify-center mt-10">
-          <button 
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold transition-all p-3 rounded-xl hover:bg-blue-50"
-          >
-            <IoAdd className="text-2xl" /> Add an item
-          </button>
-        </div>
+       
 
         {/* --- POPUP MODAL --- */}
         {showModal && (

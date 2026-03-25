@@ -19,9 +19,19 @@ export const TaskProvider = ({ children }) => {
     setTasks([...tasks, newTask]);
   };
 
- 
+ // Hàm xóa task
+  const deleteTask = (id) => {
+    setTasks(prev => prev.filter(task => task.id !== id));
+  };
+
+  // Hàm cập nhật trạng thái (Chuyển cột)
+  const updateTaskStatus = (id, newStatus) => {
+    setTasks(prev => prev.map(task => 
+      task.id === id ? { ...task, status: newStatus } : task
+    ));
+  };
   return (
-    <TaskContext.Provider value={{ tasks, addTask}}>
+    <TaskContext.Provider value={{ tasks, addTask, deleteTask, updateTaskStatus }}>
       {children}
     </TaskContext.Provider>
   );
