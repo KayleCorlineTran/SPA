@@ -19,10 +19,14 @@ export default function TaskCard({ task }) {
 
   return (
     <div className={`bg-white p-4 rounded-xl shadow-sm border-l-4 transition-all duration-300 group ${
-      isOverdue ? 'border-red-500 bg-red-50' : 
-      isUpcoming ? 'border-amber-500 bg-amber-50 animate-pulse' : 
-      'border-blue-400'
-    }`}>
+      task.status === 'DONE' 
+    ? 'border-green-500 bg-gray-50' // Trạng thái khi đã xong: viền xanh lá, nền xám nhẹ
+    : isOverdue 
+      ? 'border-red-500 bg-red-50' 
+      : isUpcoming 
+        ? 'border-amber-500 bg-amber-50 animate-pulse' 
+        : 'border-blue-400' // Trạng thái mặc định khi chưa xong và chưa đến hạn
+}`}>
       <h3 className={`font-bold text-sm ${task.status === 'DONE' ? 'line-through opacity-50 text-gray-400' : 'text-gray-800'}`}>
         {task.title}
       </h3>
@@ -38,7 +42,7 @@ export default function TaskCard({ task }) {
 
         {/* Hiển thị cảnh báo 1 tiếng */}
         {isUpcoming && (
-          <p className="text-[10px] text-red-600 font-bold flex items-center gap-1">
+          <p className="text-[10px] text-amber-600 font-bold flex items-center gap-1">
             <IoAlertCircleOutline className="animate-bounce" /> 
             Upcoming ( {diffInMinutes} minutes left!)
           </p>
