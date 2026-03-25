@@ -1,9 +1,9 @@
 
 import { IoTrashOutline, IoAdd } from "react-icons/io5";
 import { useTasks } from "../hook/useTasks";
-
+import TaskCard from "./TaskCard";
 export default function TaskList({ status, title, icon, colorClass, onAddClick }) {
-  const { tasks, deleteTask, updateTaskStatus } = useTasks();
+  const { tasks } = useTasks();
   
   const filteredTasks = tasks.filter(t => t.status === status);
 
@@ -15,27 +15,11 @@ export default function TaskList({ status, title, icon, colorClass, onAddClick }
       </h2>
       
       <div className="space-y-3">
-        {filteredTasks.map(task => (
-          <div key={task.id} className="bg-white p-4 rounded-xl shadow-sm border-l-4 group relative">
-            <h3 className={`font-bold text-sm ${status === 'DONE' ? 'line-through opacity-50' : ''}`}>
-              {task.title}
-            </h3>
-            
-            {/*Nút bấm chuyển trạng thái */}
-            <div className="flex justify-end gap-2 mt-3">
-              {status === 'TODO' && (
-               <button onClick={() => updateTaskStatus(task.id, 'IN_PROGRESS')} className="text-blue-500 text-xs font-bold hover:underline">Start</button>
-   
-              )}
-              {status === 'IN_PROGRESS' && (
-                <button onClick={() => updateTaskStatus(task.id, 'DONE')} className="text-green-600 text-xs font-bold hover:underline">Finish</button>
-              )}
-              <button onClick={() => deleteTask(task.id)} className="text-gray-300 hover:text-red-500">
-                <IoTrashOutline />
-              </button>
-            </div>
-          </div>
-        ))}
+       
+  {filteredTasks.map(task => (
+    <TaskCard key={task.id} task={task} />
+  ))}
+
       </div>
       {onAddClick && (
           <button 
